@@ -5,7 +5,8 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
-
+import 'package:MailUnsubscriber/LoginPage.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:MailUnsubscriber/Entity/Mail.dart';
 import 'package:MailUnsubscriber/Safety/privacy.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ import 'package:googleapis/gmail/v1.dart' as gmail;
 import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:http/io_client.dart';
 import 'package:http/http.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class GoogleHttpClient extends IOClient {
   Map<String, String> _headers;
@@ -32,9 +35,7 @@ class GoogleHttpClient extends IOClient {
 GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: <String>[gmail.GmailApi.GmailReadonlyScope],
 );
-final identifier = new auth.ClientId(
-    currentidentity,
-    "<please fill in>");
+final identifier = new auth.ClientId(currentidentity, "<please fill in>");
 
 void main() {
   runApp(
@@ -52,12 +53,27 @@ class SignInDemo extends StatefulWidget {
 
 class SignInDemoState extends State<SignInDemo> {
   GoogleSignInAccount _currentUser;
-  String _contextText = "12345";
-  List<Mail> entries = new List();
+  Set<Mail> entries = new Set();
+
+  get entryList {
+    return entries.toList();
+  }
 
   @override
   void initState() {
     super.initState();
+    if (loginList == null) loginList = new List<LoginWith>();
+    loginList.add(LoginWith(
+      signInAction: _handleSignIn,
+      image: AssetImage("images/google_logo.png"),
+      loginText: "Sign in with Google",
+    ));
+    loginList.add(LoginWith(
+      signInAction: _handleSignIn,
+      image: AssetImage("images/icloud_logo.png"),
+      loginText: "Sign in with iCloud",
+    ));
+
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setState(() {
         _currentUser = account;
@@ -73,18 +89,19 @@ class SignInDemoState extends State<SignInDemo> {
     data.messages.forEach((element) async {
       gmail.Message item = await getMail(element.threadId);
 
-      if (item != null)
+      if (item != null) {
+        var mail = new Mail(
+            mailThread: item.threadId,
+            headerPart: item.payload.headers,
+            bodyPart: item.payload.body);
         setState(() {
           if (entries != null) {
-            var mail = new Mail(
-                mailThread: item.threadId,
-                headerPart: item.payload.headers,
-                bodyPart: item.payload.body);
             if (mail.hasunsub) {
               entries.add(mail);
             }
           }
         });
+      }
     });
   }
 
@@ -128,72 +145,126 @@ class SignInDemoState extends State<SignInDemo> {
   }
 
   Future<void> _handleSignOut() => _googleSignIn.disconnect();
+  List<LoginWith> loginList;
 
   Widget _buildBody() {
     if (_currentUser != null) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            ListTile(
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.deepPurple[800],
+          title: const Text('Mail Unsubscriber'),
+        ),
+        body: Column(mainAxisAlignment: MainAxisAlignment.start, children: <
+            Widget>[
+          ListTile(
               leading: GoogleUserCircleAvatar(
                 identity: _currentUser,
               ),
               title: Text(_currentUser.displayName ?? ''),
               subtitle: Text(_currentUser.email ?? ''),
-            ),
-            const Text("Signed in successfully."),
-            Expanded(
-              child: SizedBox(
-                height: 200.0,
-                child: ListView.builder(
+              trailing: ClipOval(
+                child: Material(
+                  color: Colors.blueGrey[50], // button color
+                  child: InkWell(
+                    splashColor: Colors.deepPurple[800], // inkwell color
+                    child: SizedBox(
+                        width: 46, height: 46, child: Icon(Icons.exit_to_app)),
+                    onTap: _handleSignOut,
+                  ),
+                ),
+              )),
+          Divider(
+            height: 1,
+            thickness: 1,
+          ),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: _handleGetMails,
+              child: ListView.builder(
 //                  shrinkWrap: true,
-                  itemCount: entries?.length,
+                itemCount: entryList?.length,
 
-                  itemBuilder: (context, index) {
+                itemBuilder: (context, index) {
 //                    if(unsub!=null)
 //                    text =unsub.value ?? '';
 
-                    return ListTile(
-                      title:
-                          Text('${entries.elementAt(index).from}'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  DetailScreen(mail: entries.elementAt(index))),
-                        );
-                      },
-                    );
-                  },
-                ),
+//                    return ListTile(
+//                      title: Text('${entryList.elementAt(index).fromName}'),
+//                      subtitle: Text('${entryList.elementAt(index).fromMail}'),
+//                      onTap: () {
+//                        Navigator.push(
+//                          context,
+//                          MaterialPageRoute(
+//                              builder: (context) =>
+//                                  DetailScreen(mail: entryList.elementAt(index))),
+//                        );
+//                      },
+//                    );
+                  return Column(
+                    children: <Widget>[
+                      Slidable(
+                        actionPane: SlidableDrawerActionPane(),
+                        actionExtentRatio: 0.25,
+                        child: Container(
+                          color: Colors.white,
+                          child: ListTile(
+                            title: Text('${entryList.elementAt(index).fromName}'),
+                            subtitle:
+                                Text('${entryList.elementAt(index).fromMail}'),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DetailScreen(
+                                        mail: entryList.elementAt(index))),
+                              );
+                            },
+                          ),
+                        ),
+                        secondaryActions: <Widget>[
+                          IconSlideAction(
+                            caption: 'Mail',
+                            color: Colors.blueGrey,
+                            icon: Icons.mail,
+                            onTap: entryList.elementAt(index).unsubMail.isEmpty
+                                ? null
+                                : () async {
+                                    launch(
+                                        '${entryList.elementAt(index).unsubMail}');
+                                  },
+                          ),
+                          IconSlideAction(
+                            caption: 'Url',
+                            color: Colors.red,
+                            icon: Icons.web,
+                            onTap: entryList.elementAt(index).unsubUrl.isEmpty
+                                ? null
+                                : () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => WebScreen(
+                                              mail: entryList.elementAt(index))),
+                                    );
+                                  },
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        thickness: 0.01,
+                        height: 1,
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
-            Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RaisedButton(
-                    child: const Text('SIGN OUT'),
-                    onPressed: _handleSignOut,
-                  ),
-                  SizedBox(width: 20),
-                  RaisedButton(
-                    child: const Text('REFRESH'),
-                    onPressed: _handleGetMails,
-                  )
-                ]),
-          ]);
-    } else {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          const Text("You are not currently signed in."),
-          RaisedButton(
-            child: const Text('SIGN IN'),
-            onPressed: _handleSignIn,
           ),
-        ],
+        ]),
+      );
+    } else {
+      return LoginPage(
+        loginWith: loginList,
       );
     }
   }
@@ -201,9 +272,9 @@ class SignInDemoState extends State<SignInDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Google Sign In'),
-        ),
+//        appBar: AppBar(
+//          title: const Text('Mail Unsubscriber'),
+//        ),
         body: ConstrainedBox(
           constraints: const BoxConstraints.expand(),
           child: _buildBody(),
@@ -218,12 +289,70 @@ class DetailScreen extends StatelessWidget {
   // In the constructor, require a Todo.
   DetailScreen({Key key, @required this.mail}) : super(key: key);
 
+  launchURL(url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Use the Todo to create the UI.
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(mail.fromName),
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: GestureDetector(
+              onTap: () {
+//              mail.headerPart.forEach((element) {print(element.name);});
+                print(mail.mailThread);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: mail.unsubMail.isEmpty
+                        ? null
+                        : () async {
+                            launchURL('${mail.unsubMail}');
+                          },
+                    child: Text('Mail'),
+                  ),
+                  FlatButton(
+                    onPressed: mail.unsubUrl.isEmpty
+                        ? null
+                        : () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WebScreen(mail: mail)),
+                            );
+                          },
+                    child: Text('URL'),
+                  ),
+                ],
+              )),
+        ));
+  }
+}
+
+class WebScreen extends StatelessWidget {
+  // Declare a field that holds the Todo.
+  final Mail mail;
+
+  // In the constructor, require a Todo.
+  WebScreen({Key key, @required this.mail}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     // Use the Todo to create the UI.
     return Scaffold(
       appBar: AppBar(
-        title: Text(mail.from),
+        title: Text(mail.fromName),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -232,7 +361,10 @@ class DetailScreen extends StatelessWidget {
 //              mail.headerPart.forEach((element) {print(element.name);});
               print(mail.mailThread);
             },
-            child: Text(mail.listunsub)),
+            child: WebView(
+              initialUrl: '${mail.unsubUrl}',
+              javascriptMode: JavascriptMode.unrestricted,
+            )),
       ),
     );
   }
