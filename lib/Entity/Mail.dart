@@ -6,6 +6,15 @@ class Mail {
   final List<MessagePartHeader> headerPart;
   final MessagePartBody bodyPart;
   final String mailThread;
+  bool _selected = false;
+
+  void toggleSelected() {
+    _selected = !_selected;
+  }
+
+  get isSelected {
+    return _selected;
+  }
 
   @override
   bool operator ==(Object other) =>

@@ -3,7 +3,8 @@
 // found in the LICENSE file.
 
 // ignore_for_file: public_member_api_docs
-
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:MailUnsubscriber/LoginPage.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -202,53 +203,65 @@ class SignInDemoState extends State<SignInDemo> {
 //                    );
                   return Column(
                     children: <Widget>[
-                      Slidable(
-                        actionPane: SlidableDrawerActionPane(),
-                        actionExtentRatio: 0.25,
-                        child: Container(
-                          color: Colors.white,
-                          child: ListTile(
-                            title: Text('${entryList.elementAt(index).fromName}'),
-                            subtitle:
-                                Text('${entryList.elementAt(index).fromMail}'),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DetailScreen(
-                                        mail: entryList.elementAt(index))),
-                              );
-                            },
+                      Container(
+                        child: Slidable(
+                          actionPane: SlidableDrawerActionPane(),
+                          actionExtentRatio: 0.25,
+                          child: Container(
+                            decoration: new BoxDecoration(
+                              color: entryList.elementAt(index).isSelected
+                                  ? Colors.red
+                                  : Colors.white,
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                  '${entryList.elementAt(index).fromName}'),
+                              subtitle: Text(
+                                  '${entryList.elementAt(index).fromMail}'),
+                              onTap: () {
+//                              Navigator.push(
+//                                context,
+//                                MaterialPageRoute(
+//                                    builder: (context) => DetailScreen(
+//                                        mail: entryList.elementAt(index))),
+//                              );
+                                setState(() {
+                                  entryList.elementAt(index).toggleSelected();
+                                });
+                              },
+                            ),
                           ),
+                          secondaryActions: <Widget>[
+                            IconSlideAction(
+                              caption: 'Mail',
+                              color: Colors.blueGrey,
+                              icon: Icons.mail,
+                              onTap:
+                                  entryList.elementAt(index).unsubMail.isEmpty
+                                      ? null
+                                      : () async {
+                                          launch(
+                                              '${entryList.elementAt(index).unsubMail}');
+                                        },
+                            ),
+                            IconSlideAction(
+                              caption: 'Url',
+                              color: Colors.red,
+                              icon: Icons.web,
+                              onTap: entryList.elementAt(index).unsubUrl.isEmpty
+                                  ? null
+                                  : () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => WebScreen(
+                                                mail: entryList
+                                                    .elementAt(index))),
+                                      );
+                                    },
+                            ),
+                          ],
                         ),
-                        secondaryActions: <Widget>[
-                          IconSlideAction(
-                            caption: 'Mail',
-                            color: Colors.blueGrey,
-                            icon: Icons.mail,
-                            onTap: entryList.elementAt(index).unsubMail.isEmpty
-                                ? null
-                                : () async {
-                                    launch(
-                                        '${entryList.elementAt(index).unsubMail}');
-                                  },
-                          ),
-                          IconSlideAction(
-                            caption: 'Url',
-                            color: Colors.red,
-                            icon: Icons.web,
-                            onTap: entryList.elementAt(index).unsubUrl.isEmpty
-                                ? null
-                                : () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => WebScreen(
-                                              mail: entryList.elementAt(index))),
-                                    );
-                                  },
-                          ),
-                        ],
                       ),
                       Divider(
                         thickness: 0.01,
@@ -261,6 +274,36 @@ class SignInDemoState extends State<SignInDemo> {
             ),
           ),
         ]),
+        floatingActionButton:
+            !entries.any((element) => element.isSelected == true)
+                ? null
+                : FloatingActionButton(
+                    onPressed: () {
+                      entries.forEach((element) async => {
+                            if (element.isSelected == true)
+                              {
+                                if ((await http.get(element.unsubUrl)
+                                            as http.Response)
+                                        .statusCode ==
+                                    200)
+                                  {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            "Unsubscribed from ${element.fromName}",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIos: 1,
+                                        backgroundColor: Colors.red,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0),
+                                  }
+                              }
+                          });
+                    },
+                    child: Icon(Icons.accessibility_new),
+                    tooltip: 'Unsubscribe Selected',
+                    backgroundColor: Colors.green,
+                  ),
       );
     } else {
       return LoginPage(
@@ -276,9 +319,9 @@ class SignInDemoState extends State<SignInDemo> {
 //          title: const Text('Mail Unsubscriber'),
 //        ),
         body: ConstrainedBox(
-          constraints: const BoxConstraints.expand(),
-          child: _buildBody(),
-        ));
+      constraints: const BoxConstraints.expand(),
+      child: _buildBody(),
+    ));
   }
 }
 

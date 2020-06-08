@@ -37,7 +37,7 @@ class LoginPage extends StatelessWidget {
               Text(
                 'Leave Me Alone!',
                 style: GoogleFonts.architectsDaughter(
-                  fontSize: 50,
+                  fontSize: 55,
                   letterSpacing: 10,
                   color: Colors.white,
                   shadows: [
