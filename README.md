@@ -5,9 +5,10 @@ Unsubscriber for annoying Newletters
 
 ## Screen Shots 
 
-<img src="Screenshots/loginScreen.png" height="40%">
+![Mail List](Screenshots/loginScreen.png| width=50)
 ##### Mail list screen
-![Mail List](Screenshots/mailList.png) <!-- .element height="50%" width="50%" -->
+![Mail List](Screenshots/mailList.png |width=48)
+<img src="Screenshots/mailList.png" height="200px" />
 ##### Multiple Selection in list
 ![Mail List](Screenshots/multiUnsub.png)
 ##### Multiple Selection Unsubscribe Toast Result
