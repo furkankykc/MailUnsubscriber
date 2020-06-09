@@ -5,16 +5,16 @@ Unsubscriber for annoying Newletters
 
 ## Screen Shots 
 
-![Mail List](Screenshots/loginScreen.png)
+![Mail List](Screenshots/loginScreen.png | width=100)
 ##### Mail list screen
-![Mail List](Screenshots/mailList.png)
+![Mail List](Screenshots/mailList.png | width=100) 
 ##### Multiple Selection in list
-![Mail List](Screenshots/multiUnsub.png)
+![Mail List](Screenshots/multiUnsub.png | width=100)
 ##### Multiple Selection Unsubscribe Toast Result
-![Mail List](Screenshots/unsubResult.png)
+![Mail List](Screenshots/unsubResult.png | width=100) 
 ##### Multiple Slidable Quick Actions
 ###### Two choice - Unsubscribe with Mail | Unsubscribe with URL
-![Mail List](Screenshots/unsubSelection.png)
+![Mail List](Screenshots/unsubSelection.png | width=100)
 ## Getting Started
 
 This project is a starting point for a Flutter application.
