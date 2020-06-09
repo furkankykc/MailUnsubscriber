@@ -5,7 +5,7 @@ Unsubscriber for annoying Newletters
 
 ## Screen Shots 
 
-<img src="Screenshots/loginScreen.png" width="40%">
+<img src="Screenshots/loginScreen.png" height="40%">
 ##### Mail list screen
 ![Mail List](Screenshots/mailList.png) <!-- .element height="50%" width="50%" -->
 ##### Multiple Selection in list
