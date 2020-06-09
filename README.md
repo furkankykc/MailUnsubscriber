@@ -5,9 +5,9 @@ Unsubscriber for annoying Newletters
 
 ## Screen Shots 
 
-![Mail List](Screenshots/loginScreen.png| width=50)
+![Mail List](Screenshots/loginScreen.png | width=48)
 ##### Mail list screen
-![Mail List](Screenshots/mailList.png| width=50)
+![Mail List](Screenshots/mailList.png | width=48)
 ##### Multiple Selection in list
 ![Mail List](Screenshots/multiUnsub.png)
 ##### Multiple Selection Unsubscribe Toast Result
