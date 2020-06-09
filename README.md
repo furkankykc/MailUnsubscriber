@@ -2,22 +2,26 @@
 
 Unsubscriber for annoying Newletters
 
-
+| Screen                                                   | Shots                                                    |
+| -------------------------------------------------------- |:--------------------------------------------------------:|
+| <img src="Screenshots/loginScreen.png" width="50%" />    | <img src="Screenshots/mailList.png" width="50%" />       |
+| <img src="Screenshots/multiUnsub.png" width="50%" />     | <img src="Screenshots/unsubResult.png" width="50%" />    |
+| <img src="Screenshots/unsubSelection.png" width="50%" /> | <img src="Screenshots/loginGmail.png" width="50%" />     |
+     |
 ## Screen Shots 
-<img src="Screenshots/loginScreen.png" width="50%" />
+
 
 ##### Mail list screen
-<img src="Screenshots/mailList.png" width="50%" />
+
 
 ##### Multiple Selection in list
-<img src="Screenshots/multiUnsub.png" width="50%" />
+
 
 ##### Multiple Selection Unsubscribe Toast Result
-<img src="Screenshots/unsubResult.png" width="50%" />
+
 
 ##### Multiple Slidable Quick Actions
 ###### Two choice - Unsubscribe with Mail | Unsubscribe with URL
-<img src="Screenshots/unsubSelection.png" width="50%" />
 
 ## Getting Started
 
