@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>114151998321-eobcihcmok5hl0c9mk0juntq4qddejte.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.114151998321-eobcihcmok5hl0c9mk0juntq4qddejte</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>114151998321-0npkmltrj6a60k5tdjkrgr58qmdn7hmk.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA3jUJMp26HQ2OiLZrZjSPOtQs6dDAs1gQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>114151998321</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>furkankykc.mailunsubscriber.MailUnsubscriber</string>
+	<key>PROJECT_ID</key>
+	<string>mail-unsubscriber</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mail-unsubscriber.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:114151998321:ios:8b40858336424718742cd0</string>
+	<key>DATABASE_URL</key>
+	<string>https://mail-unsubscriber.firebaseio.com</string>
+
+</dict>
+</plist>

@@ -210,14 +210,17 @@ class SignInDemoState extends State<SignInDemo> {
                           child: Container(
                             decoration: new BoxDecoration(
                               color: entryList.elementAt(index).isSelected
-                                  ? Colors.red
-                                  : Colors.white,
+                                  ? Colors.deepPurple[50]
+                                  : Colors.white10,
                             ),
                             child: ListTile(
                               title: Text(
                                   '${entryList.elementAt(index).fromName}'),
                               subtitle: Text(
                                   '${entryList.elementAt(index).fromMail}'),
+                              trailing: entryList.elementAt(index).isSelected
+                                  ? Icon(Icons.check_circle)
+                                  : null,
                               onTap: () {
 //                              Navigator.push(
 //                                context,
@@ -264,8 +267,8 @@ class SignInDemoState extends State<SignInDemo> {
                         ),
                       ),
                       Divider(
-                        thickness: 0.01,
-                        height: 1,
+                        thickness: 1,
+                        height: 0.4,
                       ),
                     ],
                   );
@@ -274,36 +277,46 @@ class SignInDemoState extends State<SignInDemo> {
             ),
           ),
         ]),
-        floatingActionButton:
-            !entries.any((element) => element.isSelected == true)
-                ? null
-                : FloatingActionButton(
-                    onPressed: () {
-                      entries.forEach((element) async => {
-                            if (element.isSelected == true)
+        floatingActionButton: !entries
+                .any((element) => element.isSelected == true)
+            ? null
+            : FloatingActionButton(
+                onPressed: () {
+                  entries.forEach((element) async => {
+                        if (element.isSelected == true)
+                          {
+                            if ((await http.get(element.unsubUrl)).statusCode ==
+                                200)
                               {
-                                if ((await http.get(element.unsubUrl)
-                                            as http.Response)
-                                        .statusCode ==
-                                    200)
-                                  {
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "Unsubscribed from ${element.fromName}",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIos: 1,
-                                        backgroundColor: Colors.red,
-                                        textColor: Colors.white,
-                                        fontSize: 16.0),
-                                  }
+                                Fluttertoast.showToast(
+                                    msg:
+                                        "Unsubscribed from ${element.fromName}",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIos: 1,
+                                    backgroundColor: Colors.deepPurpleAccent,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0),
                               }
-                          });
-                    },
-                    child: Icon(Icons.accessibility_new),
-                    tooltip: 'Unsubscribe Selected',
-                    backgroundColor: Colors.green,
-                  ),
+                            else
+                              {
+                                Fluttertoast.showToast(
+                                    msg:
+                                        "Cannot Unsubscribe from ${element.fromName}",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIos: 1,
+                                    backgroundColor: Colors.deepPurpleAccent,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0),
+                              }
+                          }
+                      });
+                },
+                child: Icon(Icons.accessibility_new),
+                tooltip: 'Unsubscribe Selected',
+                backgroundColor: Colors.deepPurple,
+              ),
       );
     } else {
       return LoginPage(
@@ -395,7 +408,8 @@ class WebScreen extends StatelessWidget {
     // Use the Todo to create the UI.
     return Scaffold(
       appBar: AppBar(
-        title: Text(mail.fromName),
+        title: Text('Unsubscribing from ${mail.fromName}'),
+        backgroundColor: Colors.deepPurple,
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),

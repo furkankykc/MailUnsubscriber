@@ -23,6 +23,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+
 //        color: Colors.deepPurple[800],
         decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -31,6 +32,7 @@ class LoginPage extends StatelessWidget {
                 colors: [Colors.deepPurple[800], Colors.red])),
         child: Center(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -51,19 +53,21 @@ class LoginPage extends StatelessWidget {
                 overflow: TextOverflow.visible,
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
-                height: 50,
-              ),
+//              SizedBox(
+//                height: 50,
+//              ),
               Container(
-                  width: 320.0,
-                  height: 320.0,
+                  height: MediaQuery.of(context).size.height/2,
+                  width: MediaQuery.of(context).size.height/2,
+//                  height: 320.0,
+
                   decoration: new BoxDecoration(
                       shape: BoxShape.circle,
                       image: new DecorationImage(
                         fit: BoxFit.fill,
                         image: new AssetImage("images/bgsticker.png"),
                       ))),
-              SizedBox(height: 50),
+//              SizedBox(height: 50),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
