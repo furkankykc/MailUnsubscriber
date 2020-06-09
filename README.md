@@ -2,11 +2,11 @@
 
 Unsubscriber for annoying Newletters
 
-| Screen                                                   | Shots                                                    |
+| Screen Shots                                                  |                                                     |
 | -------------------------------------------------------- |:--------------------------------------------------------:|
-|   <img src="Screenshots/loginScreen.png" width="50%" />    | <img src="Screenshots/mailList.png" width="50%" />     |
+|   <img src="Screenshots/loginScreen.png" width="50%" />    | <img src="Screenshots/loginGmail.png" width="50%" />     |
 |   <img src="Screenshots/multiUnsub.png" width="50%" />     | <img src="Screenshots/unsubResult.png" width="50%" />  |
-|   <img src="Screenshots/unsubSelection.png" width="50%" /> | <img src="Screenshots/loginGmail.png" width="50%" />   |
+|   <img src="Screenshots/unsubSelection.png" width="50%" /> | <img src="Screenshots/mailList.png" width="50%" />   |
 ## Screen Shots 
 
 
